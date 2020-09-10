@@ -39,7 +39,8 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
 
       SELECT *
       FROM `ospiti`
-      WHERE `document_type` LIKE 'Driver License' AND YEAR(`date_of_birth`) = 1975
+      WHERE `document_type` LIKE 'Driver License'
+          AND YEAR(`date_of_birth`) = 1975
 
     • Quanti posti letto ha l'hotel in totale?
 
