@@ -46,3 +46,48 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
 
       SELECT SUM(beds)
       FROM `stanze`
+
+
+    GROUP BY
+
+    • Conta gli ospiti raggruppandoli per anno di nascita
+
+      SELECT YEAR(`date_of_birth`) AS "anno_di_nascita" ,COUNT(*) AS "num_ospiti"
+      FROM `ospiti`
+      GROUP BY YEAR(`date_of_birth`)
+
+    • Somma i prezzi dei pagamenti raggruppandoli per status
+
+      SELECT `status`, SUM(`price`)
+      FROM `pagamenti`
+      GROUP BY `status`
+
+    • Conta quante volte è stata prenotata ogni stanza
+
+      SELECT `stanza_id`, COUNT(*)
+      FROM prenotazioni
+      GROUP BY `stanza_id`
+
+    • Fai una analisi per vedere se ci sono ore in cui le prenotazioni sono più frequenti
+
+      SELECT HOUR(`created_at`), COUNT(*)
+      FROM `prenotazioni`
+      GROUP BY HOUR(`created_at`)
+
+    JOIN
+    • Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
+    • Stampare tutti gli ospiti per ogni prenotazione
+    • Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
+    • Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
+    • Prendi i dati di fatturazione per la prenotazione con id=7
+    • Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate)
+
+
+
+
+
+      ------------------  APPUNTI -----------------------------
+
+      - per tabelle e nomi colonne si usano le virgolette storte `` per le stringhe si usano '' o "" ( phpMyAdmin di MAMP accetta nomi tabella e nomi colonna anche senza virgolette Es. FROM ospiti )
+
+      - per confrontare stringhe è meglio usare il LIKE per i numeri l'uguale. In caso di confronti tra stringhe funziona anche l'uguale. Ma il like permette anche di usare i caratteri speciali tipo % o __ che hanno funzioni particolari. (ad es. % è qualsiasi altro/i carattere/i). Questi caratteri speciali si chiamano wildcards https://www.w3schools.com/sql/sql_wildcards.asp
