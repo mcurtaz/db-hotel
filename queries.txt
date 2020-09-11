@@ -76,18 +76,74 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
 
     JOIN
     • Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
+
+      SELECT ospiti.name, ospiti.lastname, COUNT(*) AS "numero_prenotazioni"
+      FROM prenotazioni_has_ospiti
+      JOIN ospiti
+      ON prenotazioni_has_ospiti.ospite_id = ospiti.id
+      GROUP BY ospite_id
+      HAVING COUNT(*) > 2
+
     • Stampare tutti gli ospiti per ogni prenotazione
+
+      SELECT prenotazioni_has_ospiti.prenotazione_id, ospiti.*
+      FROM prenotazioni_has_ospiti
+      JOIN ospiti
+      ON prenotazioni_has_ospiti.ospite_id = ospiti.id
+
     • Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
+
+      SELECT prenotazioni.id, prenotazioni.created_at,
+             pagamenti.price,
+             paganti.name, paganti.lastname, paganti.address
+      FROM prenotazioni
+      LEFT JOIN pagamenti
+      ON pagamenti.prenotazione_id = prenotazioni.id
+      LEFT JOIN paganti
+      ON paganti.id = pagamenti.pagante_id
+      WHERE YEAR(prenotazioni.created_at) = 2018
+        AND MONTH(prenotazioni.created_at) = 5
+
+
     • Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
+
+      SELECT SUM(price)
+      FROM prenotazioni
+      JOIN pagamenti
+      ON pagamenti.prenotazione_id = prenotazioni.id
+      JOIN stanze
+      ON prenotazioni.stanza_id = stanze.id
+      WHERE stanze.floor = 1
+
     • Prendi i dati di fatturazione per la prenotazione con id=7
+
+      SELECT paganti.name, paganti.lastname, paganti.address, pagamenti.price
+      FROM pagamenti
+      JOIN paganti
+      ON pagamenti.pagante_id = paganti.id
+      WHERE pagamenti.prenotazione_id = 7
+
     • Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate)
 
+      SELECT *
+      FROM stanze
+      LEFT JOIN prenotazioni
+      ON prenotazioni.stanza_id = stanze.id
+      WHERE prenotazioni.stanza_id IS null
 
 
 
 
       ------------------  APPUNTI -----------------------------
 
-      - per tabelle e nomi colonne si usano le virgolette storte `` per le stringhe si usano '' o "" ( phpMyAdmin di MAMP accetta nomi tabella e nomi colonna anche senza virgolette Es. FROM ospiti )
+      - per tabelle e nomi colonne si usano le virgolette storte `` per le stringhe si usano '' o "" ( phpMyAdmin di MAMP accetta nomi tabella e nomi colonna anche senza virgolette Es. FROM ospiti ). Dalle sezioni JOIN in giù non ho usato virgolette per semplicità tanto phpMyAdmin le accetta comunque. Per saperlo comunque andrebbero scritte così (ho provato e funziona):
+      SELECT `ospiti`.`name`, `ospiti`.`lastname`, COUNT(*) AS "numero_prenotazioni"
+      FROM `prenotazioni_has_ospiti`
+      JOIN `ospiti`
+      ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id`
+      GROUP BY `ospite_id`
+      HAVING COUNT(*) > 2
 
       - per confrontare stringhe è meglio usare il LIKE per i numeri l'uguale. In caso di confronti tra stringhe funziona anche l'uguale. Ma il like permette anche di usare i caratteri speciali tipo % o __ che hanno funzioni particolari. (ad es. % è qualsiasi altro/i carattere/i). Questi caratteri speciali si chiamano wildcards https://www.w3schools.com/sql/sql_wildcards.asp
+
+      - per confronti con dati mancanti (NULL) non si utilizzano le uguaglianze ma IS o NOT (es WHERE id IS null).
