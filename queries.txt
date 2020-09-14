@@ -70,9 +70,10 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
 
     • Fai una analisi per vedere se ci sono ore in cui le prenotazioni sono più frequenti
 
-      SELECT HOUR(`created_at`), COUNT(*)
+      SELECT HOUR(`created_at`) AS "ora", COUNT(*) AS "prenotazioni"
       FROM `prenotazioni`
       GROUP BY HOUR(`created_at`)
+      ORDER BY COUNT(*) DESC
 
     JOIN
     • Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
@@ -81,7 +82,7 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
       FROM prenotazioni_has_ospiti
       JOIN ospiti
       ON prenotazioni_has_ospiti.ospite_id = ospiti.id
-      GROUP BY ospite_id
+      GROUP BY prenotazioni_has_ospiti.ospite_id
       HAVING COUNT(*) > 2
 
     • Stampare tutti gli ospiti per ogni prenotazione
@@ -107,7 +108,7 @@ GOAL: produrre le query per rispondere alle seguenti interrogazioni
 
     • Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
 
-      SELECT SUM(price)
+      SELECT SUM(pagamenti.price)
       FROM prenotazioni
       JOIN pagamenti
       ON pagamenti.prenotazione_id = prenotazioni.id
